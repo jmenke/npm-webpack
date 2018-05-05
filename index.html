@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React.js</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# ReactJS
+
+---
+
+# Gliederung
+
+1. Wie benutze ich React
+2. Warum React
+3. React-Komponenten
+4. PropTypes
+5. Rendering und Rerendering
+6. Style und In-Line Style von Komponenten
+7. Event-Handler
+8. Forms in React
+9. HTTP Requests in React mit AJAX
+10. Fazit
+---
+# Wie benutze ich React
+
+- Zum Programmieren ist eine einfache .html File und ein Editor notwendig und folgende Scripts:
+```html
+<script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>"
+<script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+```
+- Oder man benutzt die https://codesandbox.io/ Seite um den eingebetteten React-Editor zu nutzen und mit verschiedenen vorgefertigten Templates zu starten 
+
+---
+
+# Warum React?
+
+###- Komponenten-basiertes Arbeiten -> Jede Komponente hat ihren eigenen State
+###- Deklarative Programmierung
+###- Syntactical Sugar mit JSX -> Einfach zu lesen
+###- Kann überall programmiert werden und mit Node oder React Native auf dem Server installiert werden
+
+
+---
+
+# createElements
+- __React.createELement('typ', {<props>})__
+- Die Methode bekommt den __Elementtyp__, der gebaut werden soll, und ein Objekt mit den __Eigenschaften__
+- Die Kinder (z.B. Strings) können per children: 'content' oder einfach kommasepariert angegben werden
+- __ReactDOM.render(element, rootElement)__ zum Darstellen des ELements
+
+---
+
+#Beispiel 1.1
+
+```javascript
+const element = React.createElement('div', {
+  className: 'container',
+  children: 'Hello World',
+})
+console.log(element)
+ReactDOM.render(element, rootElement)
+```
+
+Element wird mit React erzeugt und anschließen auf dem Rootelement gerendert.
+
+---
+
+# createElements mit JSX
+- babel zur JSX-Nutzung, Einbindung über
+```html
+	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+```
+- script type="text/babel"
+- Syntax: 
+```html
+ <typ className="Name">children</typ> 
+ ```
+- oder {} -> erlaubt es, hier __Javascript__ auszuführen
+- z.B. ein props-Objekt in Javascript mit dem Klassennamen und Kinder, wird übergeben mit: 
+```html
+ <typ {...props} /> 
+ ```
+- wenn man Properties von außerhalb hinzufügt:
+	- eigene Props __links__ von den fremden Props werden benutzt, falls __keine vorhanden__ sind
+	- die Props __rechts__ davon __überschreiben__ die mitgelieferten
+---
+
+# Beispiel 2.1
+
+```javascript
+const content = 'Hello World'
+const myClassName = 'container'
+const props = {
+  className: 'container',
+  children: 'Hello World',
+}
+const element = <div {...props} />
+ReactDOM.render(element, rootElement)
+```
+Elemente können wie HTML Tags geschrieben werden und dann mit {} initialisiert werden
+
+---
+
+# Nutzbare React-Komponenten erstellen
+	
+- Es ist möglich eigene Komponenten mit Hilfe von React zu erstellen
+- Man speichert eine __prop-Funktion__, die einen React-Element zurückgibt
+```javascript
+	const Message = props => (<div>{props.children}</div>)
+```
+- Variable muss mit einem Großbuchstaben anfangen! (__Babel-Transpiler__)
+- Dann kann man mithilfe von JSX diese Komponente als Tag benutzen
+ 
+---
+
+# Beispiel 3.1
+```javascript
+const Message = props => (
+  <div>{props.children}</div>
+)
+const element = (
+  <div className="container">
+    <Message>
+      Hello World
+      <Message>Goodbye World</Message>
+    </Message>
+  </div>
+)
+ReactDOM.render(element, rootElement)
+```
+Nutzung dann einfach über 
+```javascript
+<VariablenName>
+```
+---
+# Proptypes
+- Leute könnten eigene Komponenten falsch nutzen und so Fehler erhalten: __Proptypes!__
+- Mit __Funktion.propTypes__ können die __Parametertypen__ sowie die __Parameter Anzahl__
+festgelegt werden.
+- Einbinden des Pakets mit:
+```html
+<script src="https://unpkg.com/prop-types@15.6.0/prop-types.js"></script>
+```
+- Es wird dann eine Fehlermeldung bei falscher Nutzung der Komponente geworfen!
+---
+
+#Beispiel 4.1
+```javascript
+function SayHello(props) {
+  return (
+    <div>
+      Hello {props.firstName} {props.lastName}!
+    </div>
+  )
+}
+SayHello.propTypes = {
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
+}
+ReactDOM.render(
+  <SayHello firstName={true} />,
+  document.getElementById('root')
+)
+```
+- Bei Aufruf von __firstName=true__ wird jetzt ein Fehler ausgeworfen
+- Außerdem wird der User darauf hingewiesen, dass der __lastName__ noch fehlt
+---
+
+# Rendern mit Bedingung
+- Es ist möglich Bedingungen für das Rendern der Elemente einzufügen
+- möglich, da innerhalb der {} Javascript geschrieben wird
+- kann genutzt werden um mögliche Fehlereingaben zu behandeln
+
+# Beispiel 5.1
+```javascript
+function Message({message}) {
+  return (
+    <div>
+      {message ? (
+        <div>{message}</div>
+      ) : (
+        <div>No Message</div>
+      )}
+    </div>
+  )
+}
+```
+- Nicht nur if-Bedingungen möglich!
+
+---
+
+# Rerendering einer React-App
+- mit __setIntervall(Funktion,Zeit)__ kann man die übergegebene Funktion periodisch ausführen lassen
+- Hilfreich um z.B Zeit o.ä. immer wieder zu erneuern.
+
+```javascript
+function tick() {
+  const time = new Date().toLocaleTimeString()
+  const element = (
+    <div>
+      It is
+      <input value={time} />
+      <input value={time} />
+    </div>
+  )
+  ReactDOM.render(element, rootElement)
+}
+tick()
+setInterval(tick, 1000)
+```
+-Hier wird __tick()__ immer wieder ausgeführt und damit auch __ReactDOM.render__!
+
+---
+# React-Komponenten Styling mit className und In-Line Styles
+- Man kann mithilfe eines Style-Blocks in der HTML die React-Komponenten verändern
+- Dazu wird der className auf den jeweiligen Style-Name gesetzt
+- Dadurch kann man zusätzlich mit In-Line Styles die Elemente nach belieben verändern
+- Die React-Komponenten können so mit viel Komfort mit Attributen belegt werden
+---
+#Beispiel 6.1
+
+```javascript
+function Box({
+  style,
+  size,
+  className = '',
+  ...rest
+}) {
+  const sizeClassName = size ? `box--${size}` : ''
+  return (
+    <div
+      className={`box ${className} ${sizeClassName}`}
+      style={{paddingLeft: 20, ...style}}
+      {...rest}
+    />
+  )
+}
+```
+```html
+const element = (
+  <div>
+    <Box
+      size="small"
+      style={{backgroundColor: 'lightblue'}}
+    >
+      small box
+    </Box>
+  </div>
+
+```
+---
+# Event-Handlers
+
+- Sehr viele Event-Handler möglich
+- Syntax: 
+```html
+<button onclick = {Funktion}>Bla</button>
+```
+- Funktionen werden mit dem Handler von React aufgerufen, der effizienter ist
+---
+# Beispiel 7.1
+```javascript
+function App() {
+  return (
+    <div>
+      <p>
+        There have been {state.eventCount} events
+      </p>
+      <p>
+        <button onClick={increment}>⚛️</button>
+      </p>
+      <p>You typed: {state.username}</p>
+      <p>
+        <input onChange={updateUsername} />
+      </p>
+    </div>
+  )
+}
+```
+
+- Hier werden die Listener onClick und onChange benutzt
+- Die Methoden der Handler wurden ausgelagert
+---
+#Komponenten-State nutzen
+
+- Jede Komponente hat ein State-Prop
+- Syntax:  state = {lapse: 0, running: false}
+- Zugriff mit __state.lapse__ oder __state.running__
+- Außerdem sind noch Methoden wie __setState__ verfügbar, mit dem man den State __dynamisch__ setzen kann
+---
+# Beispiel 8.1
+
+```javascript
+class StopWatch extends React.Component {
+  state = {lapse: 0, running: false}
+  handleRunClick = () => {
+    this.setState(state => {
+      if (state.running) {
+        clearInterval(this.timer)
+      } else {
+        const startTime =
+          Date.now() - this.state.lapse
+        this.timer = setInterval(() => {
+          this.setState({
+            lapse: Date.now() - startTime,
+          })
+        })
+      }
+      return {running: !state.running}
+    })
+  }
+  handleClearClick = () => {
+    clearInterval(this.timer)
+    this.setState({lapse: 0, running: false})
+  }
+  ...
+}
+```
+---
+# ComponentWillUnmount
+
+- Komponenten können __Memory-Leaks__ auslösen, wenn sie während der Ausführung entfernt werden
+- Mit dem Aufrufen von __componentWillUnmount()__ kann man sich um das entfernen des Problem kümmern
+
+```javascript
+  componentWillUnmount() {
+    clearInterval(this.timer)
+  }
+``` 
+
+- In dem Beispiel wird z.B der Timer von Beispiel 8.1 gecleared, wenn man die Komponente zur __Laufzeit__ entfernt
+- So werden in der Konsole keine Warnungen mehr ausgeworfen
+---
+# DOM manipulieren mit React ref
+
+- Manchmal brauchen jQuery Plugins oder JS Bibliotheken eine DOM-Node auf der sie arbeiten können
+- Hierfür wird __ref__ von React bereitgestellt
+- Beispiel:
+```javascript
+	ref={node => (this.rootNode = node)}
+```
+- Dieses Prop kann dan automatisch genutzt werden, wenn Bibliotheken eine Node zum arbeiten brauchen.
+
+---
+# Beispiel 9.1
+```javascript
+class Tilt extends React.Component {
+  componentDidMount() {
+    VanillaTilt.init(this.rootNode, {
+      max: 25,
+      speed: 400,
+      glare: true,
+      'max-glare': 0.5,
+    })
+  }
+  render() {
+    return (
+      <div
+        ref={node => (this.rootNode = node)}
+        className="tilt-root"
+      >
+        <div className="tilt-child">
+          <div {...this.props} />
+        </div>
+      </div>
+    )
+  }
+}
+```
+- Es wird die root-Node als ref übergeben auf der die Tilt-Bibliothek arbeiten kann
+---
+# Forms in React
+- Man kann das Default-Submit Event mit __event.preventDefault()__ verbieten
+- Mit dem __onChange-Prop__ von React kann man dynamisch auf Eingaben reagieren
+- So kann man zum Beispiel dynamisch Fehlermeldungen ausgeben 
+```javascript
+ onChange={this.handleChange}
+```
+- Hier mit wird bei jeder Veränderung die handleChange Methode aufgerufen:
+```javascript
+handleChange = event => {
+    const {value} = event.target
+    this.setState({
+      error: this.props.getErrorMessage(value),
+    })
+  }
+```
+- So wird hier zur Laufzeit überprüft, ob ein Fehler existiert
+---
+# HTTP Requests mit React
+
+- AJAX Anfragen kann man komfortabel mit der Axios Bibliothek ausführen. Einbinden mit:
+```html
+<script src="https://unpkg.com/axios@0.16.2/dist/axios.min.js"></script>
+``` 
+- Mit Axios kann dann eine Request gestartet werden: 
+```javascript
+   axios({
+      url: 'https://api.github.com/graphql',
+      method: 'post',
+      data: {
+        query: `{
+          user(login: "${this.props.username}") {
+            company
+          }
+        }`,
+      },
+      headers: {
+        Authorization: `bearer GENERIERTER KEY`,
+      },
+    }).
+```
+
+---
+- Nach der Abfrage kann man die erhaltenen Daten mit den ES6 Features verarbeiten:
+
+```javascript
+.then(
+      response => {
+        this.setState({
+          loaded: true,
+          company:
+            response.data.data.user.company,
+        })
+      },
+      error => {
+        this.setState({
+          error,
+          loaded: true,
+        })
+      },
+    )
+```
+
+---
+
+# Fazit
+
+### React ist eine effiziente und flexible JavaScript Bibliothek
+- Mit kann mit React ohne Probleme interaktive UIs erzeugen und mit wenig Aufwand eine Applikation erstellen
+- Es ist deklarativ. Reakt wird sich selbst Updaten sobald der Code geändert wurde.
+- Es ist Komponenten-basiert. Jede Komponenten kümmert sich um seinen eigenen State. Man kann Daten zwischen den Komponenten hin und herschicken, ohne die DOM-Elemente zu benutzen
+- Man kann JSX und Babel benutzen, um den Code live in Javascript-Form zu sehen
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
