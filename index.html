@@ -37,27 +37,104 @@ class: center, middle
 9. HTTP Requests in React mit AJAX
 10. Fazit
 ---
-# Wie benutze ich React
+# Warum Node Package Manager
 
-- Zum Programmieren ist eine einfache .html File und ein Editor notwendig und folgende Scripts:
-```html
-<script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>"
-<script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+- Node.js macht es möglich, dass man Anwendungen in Javascript auf dem Server schreiben kann
+- Ein Tool ist sinnvoll, um die so erzeugten Pakete und Werkzeuge zu installieren und zu verwalten
+- Node Package Manager installiert die Pakete die man nutzen möchte
+- Außerdem bietet es ein nützliches Interface mit vielen Funktionen!
+
+
+---
+
+# Installieren von Node.js
+
+- Node.js muss von https://nodejs.org/en/download/ runtergeladen werden
+- Prüfen der Installation mit:
+```command
+$ which node
+/usr/bin/node
+$ node --version
+v6.10.3
 ```
-- Oder man benutzt die https://codesandbox.io/ Seite um den eingebetteten React-Editor zu nutzen und mit verschiedenen vorgefertigten Templates zu starten 
+- Bei der Installation von Node.js wird der NPM automatisch mitinstalliert
 
 ---
 
-# Warum React?
+# Node Packaged Modules
 
-###- Komponenten-basiertes Arbeiten -> Jede Komponente hat ihren eigenen State
-###- Deklarative Programmierung
-###- Syntactical Sugar mit JSX -> Einfach zu lesen
-###- Kann überall programmiert werden und mit Node oder React Native auf dem Server installiert werden
+- NPM kann Pakete im lokalen oder globalen Modus runterladen
+- Lokal: In __node_modules__ Ordner im Arbeitspfad
+- Global: In {prefix}/lib/node_modules/ (Vorsicht vor Dependency-issues!)
 
 
 ---
 
+# Ändern des Ordners für globale Pakete
+- Mit __npm config get prefix__ kann der Standard-Prefix angezeigt werden
+- Mit __npm config set prefix = ORDNERPFAD kann er geändert werden
+
+- Danach muss npm nochmal Neuinstalliert werden, damit die Pakete ohne root-Abfrage installiert werden können
+- Anschließend muss __.node_modules_global/bin__ noch in den Pfad eingebunden werden
+
+
+---
+
+# Installieren und Anzeigen von Paketen im globalen Modus
+
+```command
+$ npm install uglify-js --global
+/home/sitepoint/.node_modules_global/bin/uglifyjs -> /home/sitepoint/.node_modules_global/lib/node_modules/uglify-js/bin/uglifyjs
++ uglify-js@3.0.15
+added 4 packages in 5.836s
+```
+
+- Mit npm install PAKETNAME --global wird ein Paket im globalen Modus installiert
+- Mit npm list --global kann man sich die installierten Pakete anzeigen lassen
+
+---
+
+# Installieren von Paketen im lokalen Modus
+```command
+$ npm install underscore
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN project@1.0.0 No description
+npm WARN project@1.0.0 No repository field.
+
++ underscore@1.8.3
+added 1 package in 0.344s
+```
+
+- Mit __npm install__ PAKETNAME wird das Paket installiert. Hier ohne --global
+- Nach der Installation werden die Dependencies im package.json aktualisiert:
+
+```json
+{
+  ...
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
+```
+---
+
+# Deinstallieren von lokalen Paketen
+
+```command
+$ npm uninstall underscore
+removed 2 packages in 0.107s
+$ npm list
+project@1.0.0 /home/sitepoint/project
+└── (empty)
+```
+
+- Deinstallieren mit __npm uninstall__ PAKETNAME
+---
+
+# Aktualisieren von Paketen
+- Mit __npm outdated__
+
+---
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
