@@ -133,7 +133,54 @@ project@1.0.0 /home/sitepoint/project
 
 # Aktualisieren von Paketen
 - Mit __npm outdated__
+- Current: Die aktuelle Version des Pakets
+- Wanted: Die aktuellste Version, ohne die Kompatibilität zu stören
+- Latest: Die aktuellste Version
 
+- Updaten der Pakete mit __npm update__:
+```command
+$ npm update underscore
++ underscore@1.8.3
+updated 1 package in 0.236s
+
+$ npm list
+project@1.0.0 /home/sitepoint/project
+└── underscore@1.8.3
+```
+
+---
+
+# Suchen nach Paketen
+- Mit _npm search_:
+```command
+$ npm search mkdir
+NAME      | DESCRIPTION          | AUTHOR          | DATE       | VERSION
+mkdir     | Directory crea…      | =joehewitt      | 2012-04-17 | 0.0.2
+fs-extra  | fs-extra conta…      | =jprichardson…  | 2017-05-04 | 3.0.1
+mkdirp    | Recursively mkdir,…  | =substack       | 2015-05-14 | 0.5.1
+...
+```
+---
+# npm-Cache reinigen
+
+- npm behält eine Kopie der Pakete, damit sie nicht nochmal runtergeladen werden müssen
+- kann mit der Zeit sehr voll werden
+- reinigen mit __npm cache clean__
+---
+
+# Noch ein paar zusätzliche Aliase
+- npm i <package> – installiert lokales Paket
+- npm i -g <package> – installiert globales Paket
+- npm un <package> – deinstalliert lokales Paket
+- npm up – npm Aktualisiert Pakete
+- npm t – Führt Tests aus
+- npm ls – Listet installierte Module auf
+- npm ll oder npm la – Gibt zusätzliche Paketinformationen aus
+
+---
+class: center, middle
+
+# Webpack
 ---
 
     </textarea>
