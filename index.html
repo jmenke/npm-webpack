@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>React.js</title>
+    <title>npm und Webpack</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -24,19 +24,7 @@ class: center, middle
 
 ---
 
-# Gliederung
 
-1. Wie benutze ich React
-2. Warum React
-3. React-Komponenten
-4. PropTypes
-5. Rendering und Rerendering
-6. Style und In-Line Style von Komponenten
-7. Event-Handler
-8. Forms in React
-9. HTTP Requests in React mit AJAX
-10. Fazit
----
 # Warum Node Package Manager
 
 - Node.js macht es möglich, dass man Anwendungen in Javascript auf dem Server schreiben kann
@@ -139,13 +127,13 @@ project@1.0.0 /home/sitepoint/project
 
 - Updaten der Pakete mit __npm update__:
 ```command
-$ npm update underscore
-+ underscore@1.8.3
-updated 1 package in 0.236s
+	$ npm update underscore
+	underscore@1.8.3
+	updated 1 package in 0.236s
 
-$ npm list
-project@1.0.0 /home/sitepoint/project
-└── underscore@1.8.3
+	$ npm list
+	project@1.0.0 /home/sitepoint/project
+	underscore@1.8.3
 ```
 
 ---
@@ -182,6 +170,107 @@ class: center, middle
 
 # Webpack
 ---
+
+# Was ist Webpack?
+
+- Essentiell ist Webpack dafür da, um Javascript Applikationen zu bündeln. Es kann aber auch HTML, CSS, sowie Bilder transformieren.
+- Webpack kann die Nummer der HTTP-Requests kontrollieren
+- Außerdem kann mit Webpack einfach npm-Pakete eingebunden werden
+
+---
+# Installation
+```command
+mkdir webpack-demo && cd webpack-demo
+npm init -y
+npm install --save-dev webpack webpack-cli
+```
+
+---
+# Bundlen von Projekten
+
+- Man benötigt ein npm script um Webpack zu nutzen
+```json
+ {
+    ...
+    "scripts": {
+     "test": "echo "Error: no test specified" && exit 1"
+     "develop": "webpack --mode development --watch",
+     "build": "webpack --mode production"
+    },
+    ...
+  }
+```
+- Mit __npm run develop__ wird das Script ausgeführt und das erste Bundle entsteht
+- __--mode development__ optimiert build-speed und Debugging
+- __--mode production__ optimiert Ausführgeschwindigkeit zur Laufzeit und Output-Dateigröße
+
+---
+# Module
+- Mit ES Modulen können größere Programme in viele kleine selbstfunktionierende Programme gespalten werden
+- Webpack kann diese mit __import__ und __export__ nutzen
+
+```javascript
+import { groupBy } from "lodash-es"
+import people from "./people"
+```
+
+---
+# Loader
+- Loader kann man nutzen, um Präprozessoren über Dateien laufen zu lassen, die importiert wurden
+- Hier ein Beispiel mit dem Babel-Transpiler
+```javascript
+module: {
+     rules: [
+       {
+         test: /\.js$/,
+         exclude: /(node_modules|bower_components)/,
+         use: {
+           loader: 'babel-loader',
+         }
+       }
+     ]
+   }
+```
+- Nun werden alle .js Dateien automatisch von dem Loader bearbeitet
+- Loader können auch verkettet werden
+- Beispiel Loader: Sass-Loader, CSS-Loader, Style-Loader ,File-Loader...
+---
+# Code-Splitting
+
+- Mit Beispielsweise folgender .js Datei lassen sich Projekte splitten
+```javascript
+   const path = require('path')
+
+  module.exports = {
+    entry: {
+      app: './src/app.js'
+    },
+    output: {
+     filename: '[name].bundle.js',
+      path: path.resolve(__dirname, 'dist')
+    },
+    ...
+  }
+```
+- Hier werden zwei Export-Dateien festgelegt, die dann erzeugt werden
+- Dies sorgt für dynamischen performanteren Code, da nicht alles auf einmal gefetched werden muss
+
+---
+# Generieren der HTML
+- Wenn sich die Output-Files verändern, muss man die HTML- Seite aktualisieren
+- Mit dem __html-webpack-plugin__ passiert dies von ganz automatisch
+```command
+npm install --save-dev html-webpack-plugin clean-webpack-plugin
+```
+---
+# Fazit
+__npm__ und __Webpack__ sind vielfältige Tools um das Schreiben von Anwendungen sehr viel __erleichtert__.
+Man kann sich sehr einfach Pakete und andere Tools oder Plugins runterladen und installieren und es lässt sich noch einfacher verwalten.
+
+Mit Webpack lassen sich __performante__ und __effiziente__ Webanwendungen schreiben, die aus kleinen selbstfunktionierenden Codestücken besteht. 
+Der Code wir zudem leichter für andere Anwendungen zu nutzen, da Dank der Loader alles in den Bundle-Dateien präsent ist.
+Alles in allem gestalten diese beiden Tools das Programmieren sehr viel __weniger komplex__ und dafür __effizienter__. 
+
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
